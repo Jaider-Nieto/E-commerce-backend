@@ -203,7 +203,7 @@ export class ShoppingCartService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<ShoppingCartResponseDto> {
     try {
       const shoppingCart = await this.shoppingCartRepository.findOne({
         where: { id },
@@ -211,7 +211,11 @@ export class ShoppingCartService {
 
       await this.shoppingCartRepository.remove(shoppingCart)
 
-      return 'eliminao'
+      return {
+        status: HttpStatus.OK,
+        message: 'deleted',
+        data: shoppingCart,
+      }
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
