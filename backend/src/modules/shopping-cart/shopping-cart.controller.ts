@@ -31,8 +31,13 @@ export class ShoppingCartController {
   }
 
   @Patch('add')
-  add(@Body() { shoppingCartId, productId }: AddProductDto) {
-    return this.shoppingCartService.add(shoppingCartId, productId)
+  addProduct(@Body() { shoppingCartId, productId }: AddProductDto) {
+    return this.shoppingCartService.addProduct(shoppingCartId, productId)
+  }
+
+  @Patch('remove')
+  removeProduct(@Body() { shoppingCartId, productId }: AddProductDto) {
+    return this.shoppingCartService.removeProduct(shoppingCartId, productId)
   }
 
   @Delete(':shoppingCartId')
