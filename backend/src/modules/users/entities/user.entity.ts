@@ -1,7 +1,10 @@
+import { ShoppingCart } from '../../shopping-cart/entities/shopping-cart.entity'
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
@@ -28,6 +31,10 @@ export class User {
 
   @Column()
   adress: string
+
+  @OneToOne(() => ShoppingCart, (shoppingCart) => shoppingCart.user)
+  @JoinColumn()
+  shoppingCart: ShoppingCart
 
   @CreateDateColumn()
   createAt: Date

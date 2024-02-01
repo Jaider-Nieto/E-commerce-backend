@@ -1,8 +1,11 @@
-import { CATEGORIES } from 'src/constants/categories.enum'
+import { CATEGORIES } from '../../../constants/categories.enum'
+import { ShoppingCart } from '../../shopping-cart/entities/shopping-cart.entity'
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
@@ -32,6 +35,13 @@ export class Product {
 
   @Column({ type: 'enum', enum: CATEGORIES })
   category: CATEGORIES
+
+  @Column({ default: 1 })
+  quantity: number
+
+  @ManyToMany(() => ShoppingCart, (shoppingCart) => shoppingCart.products)
+  @JoinTable()
+  shoppingCart: ShoppingCart[]
 
   @CreateDateColumn()
   createAt: Date

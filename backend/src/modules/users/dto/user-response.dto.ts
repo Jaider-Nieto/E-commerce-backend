@@ -1,8 +1,6 @@
-import { HttpStatus } from '@nestjs/common';
-import { User } from '../entities/user.entity';
+import { User } from '../entities/user.entity'
+import { Res } from '../../../constants/response.interface'
 
-export class UserResponseDto {
-  status: HttpStatus;
-  message: string;
-  data: User | User[];
+export class UserResponseDto extends Res {
+  data: User | User[]
 }
