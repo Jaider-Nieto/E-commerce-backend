@@ -4,10 +4,12 @@ import { ShoppingCartController } from './shopping-cart.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ShoppingCart } from './entities/shopping-cart.entity'
 import { Product } from '../products/entities/product.entity'
+import { User } from '../users/entities/user.entity'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ShoppingCart, Product])],
+  imports: [TypeOrmModule.forFeature([ShoppingCart, Product, User])],
   controllers: [ShoppingCartController],
   providers: [ShoppingCartService],
+  exports: [ShoppingCartService]
 })
 export class ShoppingCartModule {}

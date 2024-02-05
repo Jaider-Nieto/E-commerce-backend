@@ -1,24 +1,18 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   Delete,
 } from '@nestjs/common'
 import { ShoppingCartService } from './shopping-cart.service'
-import { CreateShoppingCartDto } from './dto/create-shopping-cart.dto'
 import { AddProductDto } from './dto/add-product.dto'
+import { RemoveProductDto } from './dto/remove-product.dto'
 
 @Controller('shopping-cart')
 export class ShoppingCartController {
   constructor(private readonly shoppingCartService: ShoppingCartService) {}
-
-  @Post('create')
-  create(@Body() createShoppingCartDto: CreateShoppingCartDto) {
-    return this.shoppingCartService.create(createShoppingCartDto)
-  }
 
   @Get('all')
   findAll() {
@@ -36,12 +30,12 @@ export class ShoppingCartController {
   }
 
   @Patch('remove')
-  removeProduct(@Body() { shoppingCartId, productId }: AddProductDto) {
+  removeProduct(@Body() { shoppingCartId, productId }: RemoveProductDto) {
     return this.shoppingCartService.removeProduct(shoppingCartId, productId)
   }
 
   @Delete(':shoppingCartId')
-  remove(@Param('shoppingCartId') shoppingCartId: string) {
-    return this.shoppingCartService.remove(shoppingCartId)
+  cleanCart(@Param('shoppingCartId') shoppingCartId: string) {
+    return this.shoppingCartService.cleanCart(shoppingCartId)
   }
 }

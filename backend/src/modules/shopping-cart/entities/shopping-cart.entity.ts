@@ -20,7 +20,7 @@ export class ShoppingCart {
   @Column({ default: 0 })
   totalPrice: number
 
-  @OneToOne(() => User, (user) => user.shoppingCart, { cascade: true })
+  @OneToOne(() => User, (user) => user.shoppingCart)
   @JoinColumn()
   user: User
 

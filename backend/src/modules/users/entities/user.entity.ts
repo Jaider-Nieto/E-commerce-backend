@@ -32,7 +32,10 @@ export class User {
   @Column()
   adress: string
 
-  @OneToOne(() => ShoppingCart, (shoppingCart) => shoppingCart.user)
+  @OneToOne(() => ShoppingCart, (shoppingCart) => shoppingCart.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   shoppingCart: ShoppingCart
 

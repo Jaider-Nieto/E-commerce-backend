@@ -84,7 +84,7 @@ export class ProductsService {
     }
   }
 
-  async getCategories() {
+  getCategories() {
     return {
       status: HttpStatus.OK,
       message: 'ok',

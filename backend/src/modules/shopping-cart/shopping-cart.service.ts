@@ -6,6 +6,7 @@ import { Repository } from 'typeorm'
 import { ShoppingCartResponseDto } from './dto/shopping-cart-response.dto'
 import { Product } from '../products/entities/product.entity'
 import { calcTotalPrice } from '../../utils/CalcTotalPrice'
+import { User } from '../users/entities/user.entity'
 
 @Injectable()
 export class ShoppingCartService {
@@ -14,30 +15,9 @@ export class ShoppingCartService {
     private readonly shoppingCartRepository: Repository<ShoppingCart>,
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
-
-  async create(
-    createShoppingCartDto: CreateShoppingCartDto,
-  ): Promise<ShoppingCartResponseDto> {
-    try {
-      const product = await this.productRepository.findOne({
-        where: { id: createShoppingCartDto.product },
-      })
-
-      const shoppingCart = await this.shoppingCartRepository.save({
-        products: [product],
-        user: createShoppingCartDto.user,
-        totalPrice: product.price,
-      })
-      return {
-        status: HttpStatus.OK,
-        message: 'ok',
-        data: shoppingCart,
-      }
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.BAD_REQUEST)
-    }
-  }
 
   async findAll(): Promise<ShoppingCartResponseDto> {
     try {
@@ -60,6 +40,13 @@ export class ShoppingCartService {
         where: { id },
         relations: ['products', 'user'],
       })
+
+      if (!shoppingCart || shoppingCart === null)
+        throw new HttpException(
+          'El carrito de compras ya ha sido eliminado o no existe',
+          HttpStatus.BAD_REQUEST,
+        )
+
       return {
         status: HttpStatus.OK,
         message: 'ok',
@@ -203,13 +190,23 @@ export class ShoppingCartService {
     }
   }
 
-  async remove(id: string): Promise<ShoppingCartResponseDto> {
+  async cleanCart(id: string): Promise<ShoppingCartResponseDto> {
     try {
       const shoppingCart = await this.shoppingCartRepository.findOne({
         where: { id },
+        relations: ['products', 'user']
       })
 
-      await this.shoppingCartRepository.remove(shoppingCart)
+      if (!shoppingCart || shoppingCart === null)
+        throw new HttpException(
+          'El carrito de compras ya ha sido eliminado o no existe',
+          HttpStatus.BAD_REQUEST,
+        )
+
+      shoppingCart.products = []
+      shoppingCart.totalPrice = 0
+
+      await this.shoppingCartRepository.save(shoppingCart)
 
       return {
         status: HttpStatus.OK,
