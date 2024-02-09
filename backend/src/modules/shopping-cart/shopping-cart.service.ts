@@ -3,7 +3,7 @@ import { CreateShoppingCartDto } from './dto/create-shopping-cart.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ShoppingCart } from './entities/shopping-cart.entity'
 import { Repository } from 'typeorm'
-import { ShoppingCartResponseDto } from './dto/shopping-cart-response.dto'
+import { ShoppingCartResponseDto, ShoppingCartsResponseDto } from './dto/shopping-cart-response.dto'
 import { Product } from '../products/entities/product.entity'
 import { calcTotalPrice } from '../../utils/CalcTotalPrice'
 import { User } from '../users/entities/user.entity'
@@ -19,7 +19,7 @@ export class ShoppingCartService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async findAll(): Promise<ShoppingCartResponseDto> {
+  async findAll(): Promise<ShoppingCartsResponseDto> {
     try {
       const shoppingCarts = await this.shoppingCartRepository.find({
         relations: ['products', 'user'],

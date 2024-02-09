@@ -3,8 +3,11 @@ import { Res } from '../../../constants/response.interface'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class ShoppingCartResponseDto extends Res {
-  @ApiProperty({type: ShoppingCart})
-  data: ShoppingCart | ShoppingCart[]
+  @ApiProperty({ type: ShoppingCart })
+  data: ShoppingCart
 }
 
-
+export class ShoppingCartsResponseDto extends Res {
+  @ApiProperty({ type: [ShoppingCart] })
+  data: ShoppingCart[]
+}

@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from './entities/user.entity'
 import { Repository } from 'typeorm'
-import { UserResponseDto } from './dto/user-response.dto'
+import { UserResponseDto, UsersResponseDto } from './dto/user-response.dto'
 import { ShoppingCart } from '../shopping-cart/entities/shopping-cart.entity'
 
 @Injectable()
@@ -36,7 +36,7 @@ export class UsersService {
     await this.userRepository.save(user)
   }
 
-  async findAll(): Promise<UserResponseDto> {
+  async findAll(): Promise<UsersResponseDto> {
     try {
       const users = await this.userRepository.find()
       return {
