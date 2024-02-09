@@ -1,15 +1,10 @@
-import {
-  Controller,
-  Get,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common'
+import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common'
 import { ShoppingCartService } from './shopping-cart.service'
 import { AddProductDto } from './dto/add-product.dto'
 import { RemoveProductDto } from './dto/remove-product.dto'
+import { ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Shopping-Cart')
 @Controller('shopping-cart')
 export class ShoppingCartController {
   constructor(private readonly shoppingCartService: ShoppingCartService) {}
