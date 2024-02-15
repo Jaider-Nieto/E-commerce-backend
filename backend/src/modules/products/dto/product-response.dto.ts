@@ -1,5 +1,5 @@
 import { Product } from '../entities/product.entity'
-import { Res } from '../../../constants/response.interface'
+import { Res } from '../../../interfaces/response.interface'
 import { ApiProperty } from '@nestjs/swagger'
 import { CATEGORIES } from 'src/constants/categories.enum'
 

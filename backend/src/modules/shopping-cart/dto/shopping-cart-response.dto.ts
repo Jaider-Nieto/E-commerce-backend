@@ -1,5 +1,5 @@
 import { ShoppingCart } from '../entities/shopping-cart.entity'
-import { Res } from '../../../constants/response.interface'
+import { Res } from '../../../interfaces/response.interface'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class ShoppingCartResponseDto extends Res {

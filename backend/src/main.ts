@@ -18,7 +18,6 @@ async function bootstrap() {
     .setDescription('aplicacion de ventas de productos')
     .setVersion('1.0')
     .build()
-
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('docs', app, document)
 
