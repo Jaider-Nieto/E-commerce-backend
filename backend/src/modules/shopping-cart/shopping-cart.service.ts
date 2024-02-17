@@ -1,12 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { CreateShoppingCartDto } from './dto/create-shopping-cart.dto'
 import { InjectRepository } from '@nestjs/typeorm'
-import { ShoppingCart } from './entities/shopping-cart.entity'
 import { Repository } from 'typeorm'
-import { ShoppingCartResponseDto, ShoppingCartsResponseDto } from './dto/shopping-cart-response.dto'
+
+import {
+  ShoppingCartResponseDto,
+  ShoppingCartsResponseDto,
+} from './dto/shopping-cart-response.dto'
+import { ShoppingCart } from './entities/shopping-cart.entity'
 import { Product } from '../products/entities/product.entity'
 import { calcTotalPrice } from '../../utils/CalcTotalPrice'
-import { User } from '../users/entities/user.entity'
 
 @Injectable()
 export class ShoppingCartService {
@@ -15,8 +17,6 @@ export class ShoppingCartService {
     private readonly shoppingCartRepository: Repository<ShoppingCart>,
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
   ) {}
 
   async findAll(): Promise<ShoppingCartsResponseDto> {
@@ -194,7 +194,7 @@ export class ShoppingCartService {
     try {
       const shoppingCart = await this.shoppingCartRepository.findOne({
         where: { id },
-        relations: ['products', 'user']
+        relations: ['products', 'user'],
       })
 
       if (!shoppingCart || shoppingCart === null)

@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
-import { User } from './entities/user.entity'
 import { Repository } from 'typeorm'
+
+import { User } from './entities/user.entity'
+import { UpdateUserDto } from './dto/update-user.dto'
+import { CreateUserDto } from './dto/create-user.dto'
 import { UserResponseDto, UsersResponseDto } from './dto/user-response.dto'
 import { ShoppingCart } from '../shopping-cart/entities/shopping-cart.entity'
 

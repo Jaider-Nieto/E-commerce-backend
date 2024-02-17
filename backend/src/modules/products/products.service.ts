@@ -20,6 +20,9 @@ export class ProductsService {
   ): Promise<ProductResponseDto> {
     try {
       const product = await this.productRepository.save(createProductDto)
+
+      this.cacheManager.reset()
+
       return {
         status: HttpStatus.OK,
         message: 'create',
