@@ -11,7 +11,7 @@ import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { UserResponseDto, UsersResponseDto } from './dto/user-response.dto'
+import { User } from './entities/user.entity'
 
 @ApiTags('Users')
 @Controller('users')
@@ -20,7 +20,7 @@ export class UsersController {
 
   @Post('create')
   @ApiCreatedResponse({
-    type: UserResponseDto,
+    type: User,
   })
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto)
@@ -28,7 +28,7 @@ export class UsersController {
 
   @Get('all')
   @ApiResponse({
-    type: UsersResponseDto,
+    type: [User],
   })
   findAll() {
     return this.usersService.findAll()
@@ -36,7 +36,7 @@ export class UsersController {
 
   @Get('id/:userId')
   @ApiResponse({
-    type: UserResponseDto,
+    type: User,
   })
   findOne(@Param('userId') userId: string) {
     return this.usersService.findOne(userId)
@@ -44,7 +44,7 @@ export class UsersController {
 
   @Patch('update/:userId')
   @ApiResponse({
-    type: UserResponseDto,
+    type: User,
   })
   update(
     @Param('userId') userId: string,
@@ -55,7 +55,7 @@ export class UsersController {
 
   @Delete('delete/:userId')
   @ApiResponse({
-    type: UserResponseDto,
+    type: User,
   })
   remove(@Param('userId') userId: string) {
     return this.usersService.remove(userId)

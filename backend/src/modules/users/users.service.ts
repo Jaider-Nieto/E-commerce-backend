@@ -5,7 +5,6 @@ import { Repository } from 'typeorm'
 import { User } from './entities/user.entity'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { CreateUserDto } from './dto/create-user.dto'
-import { UserResponseDto, UsersResponseDto } from './dto/user-response.dto'
 import { ShoppingCart } from '../shopping-cart/entities/shopping-cart.entity'
 
 @Injectable()
@@ -16,16 +15,12 @@ export class UsersService {
     private readonly shoppingCartRepository: Repository<ShoppingCart>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     try {
       const user = await this.userRepository.save(createUserDto)
       user.shoppingCart = await this.shoppingCartRepository.save({})
 
-      return {
-        status: HttpStatus.OK,
-        message: 'user created',
-        data: user,
-      }
+      return user
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
@@ -37,20 +32,15 @@ export class UsersService {
     await this.userRepository.save(user)
   }
 
-  async findAll(): Promise<UsersResponseDto> {
+  async findAll(): Promise<User[]> {
     try {
-      const users = await this.userRepository.find()
-      return {
-        status: HttpStatus.OK,
-        message: users.length < 1 ? 'No hay usuarios disponibles' : 'ok',
-        data: users,
-      }
+      return await this.userRepository.find()
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async findOne(id: string): Promise<UserResponseDto> {
+  async findOne(id: string): Promise<User> {
     try {
       const user = await this.userRepository.findOne({
         where: { id },
@@ -63,20 +53,13 @@ export class UsersService {
           HttpStatus.BAD_REQUEST,
         )
 
-      return {
-        status: HttpStatus.OK,
-        message: 'ok',
-        data: user,
-      }
+      return user
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async update(
-    id: string,
-    updateUserDto: UpdateUserDto,
-  ): Promise<UserResponseDto> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     try {
       const user = await this.userRepository.findOne({ where: { id } })
 
@@ -88,17 +71,13 @@ export class UsersService {
 
       await this.userRepository.update(id, updateUserDto)
 
-      return {
-        status: HttpStatus.OK,
-        message: 'update',
-        data: user,
-      }
+      return user
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async remove(id: string): Promise<UserResponseDto> {
+  async remove(id: string): Promise<User> {
     try {
       const user = await this.userRepository.findOne({ where: { id } })
 
@@ -113,11 +92,7 @@ export class UsersService {
       })
 
       await this.userRepository.remove(user)
-      return {
-        status: HttpStatus.OK,
-        message: 'delete',
-        data: user,
-      }
+      return user
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }

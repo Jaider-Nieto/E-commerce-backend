@@ -22,7 +22,7 @@ export class User {
 
   @ApiProperty()
   @Column()
-  birthDate: Date
+  birthDate: string
 
   @ApiProperty()
   @Column()
@@ -50,9 +50,9 @@ export class User {
 
   @ApiProperty()
   @CreateDateColumn()
-  createAt: Date
+  createAt?: string
 
   @ApiProperty()
   @UpdateDateColumn()
-  updateAt: Date
+  updateAt?: string
 }

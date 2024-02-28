@@ -7,31 +7,41 @@ import { ProductsModule } from './modules/products/products.module'
 import { ShoppingCartModule } from './modules/shopping-cart/shopping-cart.module'
 import { CacheModule } from '@nestjs/cache-manager'
 import { redisStore } from 'cache-manager-redis-yet'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 @Module({
   imports: [
     UsersModule,
     ProductsModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'root',
-      password: '10051006',
-      database: 'ecommerce',
-      entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configModule: ConfigService) => ({
+        type: 'postgres',
+        host: configModule.get('DB_HOST'),
+        port: configModule.get('DB_PORT'),
+        username: configModule.get('DB_USER'),
+        password: configModule.get('DB_PASSWORD'),
+        database: configModule.get('DB_NAME'),
+        entities: ['dist/**/*.entity{.ts,.js}'],
+        synchronize: true,
+      }),
     }),
     ShoppingCartModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     CacheModule.registerAsync({
       isGlobal: true,
-      useFactory: async () => ({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configModule: ConfigService) => ({
         store: await redisStore({
           socket: {
-            host: 'localhost',
-            port: 6379,
+            host: configModule.get('REDIS_HOST'),
+            port: configModule.get('REDIS_PORT'),
           },
-          ttl: 1000 * 60,
+          ttl: configModule.get('TTL'),
         }),
       }),
     }),
@@ -39,4 +49,10 @@ import { redisStore } from 'cache-manager-redis-yet'
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  static port: number
+
+  constructor(private readonly configModule: ConfigService) {
+    AppModule.port = Number(this.configModule.get('PORT'))
+  }
+}

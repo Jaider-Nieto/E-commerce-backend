@@ -3,10 +3,7 @@ import { ShoppingCartService } from './shopping-cart.service'
 import { AddProductDto } from './dto/add-product.dto'
 import { RemoveProductDto } from './dto/remove-product.dto'
 import { ApiResponse, ApiTags } from '@nestjs/swagger'
-import {
-  ShoppingCartResponseDto,
-  ShoppingCartsResponseDto,
-} from './dto/shopping-cart-response.dto'
+import { ShoppingCart } from './entities/shopping-cart.entity'
 
 @ApiTags('Shopping-Cart')
 @Controller('shopping-cart')
@@ -15,7 +12,7 @@ export class ShoppingCartController {
 
   @Get('all')
   @ApiResponse({
-    type: ShoppingCartsResponseDto,
+    type: [ShoppingCart],
   })
   findAll() {
     return this.shoppingCartService.findAll()
@@ -23,7 +20,7 @@ export class ShoppingCartController {
 
   @Get('id/:shoppingCartId')
   @ApiResponse({
-    type: ShoppingCartResponseDto,
+    type: ShoppingCart,
   })
   findOne(@Param('shoppingCartId') shoppingCartId: string) {
     return this.shoppingCartService.findOne(shoppingCartId)
@@ -31,7 +28,7 @@ export class ShoppingCartController {
 
   @Patch('add')
   @ApiResponse({
-    type: ShoppingCartResponseDto,
+    type: ShoppingCart,
   })
   addProduct(@Body() { shoppingCartId, productId }: AddProductDto) {
     return this.shoppingCartService.addProduct(shoppingCartId, productId)
@@ -39,7 +36,7 @@ export class ShoppingCartController {
 
   @Patch('remove')
   @ApiResponse({
-    type: ShoppingCartResponseDto,
+    type: ShoppingCart,
   })
   removeProduct(@Body() { shoppingCartId, productId }: RemoveProductDto) {
     return this.shoppingCartService.removeProduct(shoppingCartId, productId)
@@ -47,7 +44,7 @@ export class ShoppingCartController {
 
   @Delete(':shoppingCartId')
   @ApiResponse({
-    type: ShoppingCartResponseDto,
+    type: ShoppingCart,
   })
   cleanCart(@Param('shoppingCartId') shoppingCartId: string) {
     return this.shoppingCartService.cleanCart(shoppingCartId)

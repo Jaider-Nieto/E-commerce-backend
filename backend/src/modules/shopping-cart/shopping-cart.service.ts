@@ -2,10 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
-import {
-  ShoppingCartResponseDto,
-  ShoppingCartsResponseDto,
-} from './dto/shopping-cart-response.dto'
 import { ShoppingCart } from './entities/shopping-cart.entity'
 import { Product } from '../products/entities/product.entity'
 import { calcTotalPrice } from '../../utils/CalcTotalPrice'
@@ -19,22 +15,18 @@ export class ShoppingCartService {
     private readonly productRepository: Repository<Product>,
   ) {}
 
-  async findAll(): Promise<ShoppingCartsResponseDto> {
+  async findAll(): Promise<ShoppingCart[]> {
     try {
       const shoppingCarts = await this.shoppingCartRepository.find({
         relations: ['products', 'user'],
       })
-      return {
-        status: HttpStatus.OK,
-        message: 'ok',
-        data: shoppingCarts,
-      }
+      return shoppingCarts
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async findOne(id: string): Promise<ShoppingCartResponseDto> {
+  async findOne(id: string): Promise<ShoppingCart> {
     try {
       const shoppingCart = await this.shoppingCartRepository.findOne({
         where: { id },
@@ -47,20 +39,13 @@ export class ShoppingCartService {
           HttpStatus.BAD_REQUEST,
         )
 
-      return {
-        status: HttpStatus.OK,
-        message: 'ok',
-        data: shoppingCart,
-      }
+      return shoppingCart
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async addProduct(
-    id: string,
-    productId: number,
-  ): Promise<ShoppingCartResponseDto> {
+  async addProduct(id: string, productId: number): Promise<ShoppingCart> {
     try {
       if (!id)
         throw new HttpException('missing id field', HttpStatus.BAD_REQUEST)
@@ -113,20 +98,13 @@ export class ShoppingCartService {
 
       await this.shoppingCartRepository.save(shoppingCart)
 
-      return {
-        status: HttpStatus.OK,
-        message: 'ok',
-        data: shoppingCart,
-      }
+      return shoppingCart
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async removeProduct(
-    id: string,
-    productId: number,
-  ): Promise<ShoppingCartResponseDto> {
+  async removeProduct(id: string, productId: number): Promise<ShoppingCart> {
     try {
       if (!id)
         throw new HttpException('missing id field', HttpStatus.BAD_REQUEST)
@@ -180,17 +158,13 @@ export class ShoppingCartService {
 
       await this.shoppingCartRepository.save(shoppingCart)
 
-      return {
-        status: HttpStatus.OK,
-        message: 'ok',
-        data: shoppingCart,
-      }
+      return shoppingCart
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async cleanCart(id: string): Promise<ShoppingCartResponseDto> {
+  async cleanCart(id: string): Promise<ShoppingCart> {
     try {
       const shoppingCart = await this.shoppingCartRepository.findOne({
         where: { id },
@@ -208,11 +182,7 @@ export class ShoppingCartService {
 
       await this.shoppingCartRepository.save(shoppingCart)
 
-      return {
-        status: HttpStatus.OK,
-        message: 'deleted',
-        data: shoppingCart,
-      }
+      return shoppingCart
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }

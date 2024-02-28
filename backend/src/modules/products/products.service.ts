@@ -5,7 +5,7 @@ import { Repository, ILike } from 'typeorm'
 
 import { CACHE_KEYS, CATEGORIES } from '../../constants'
 import { Product } from './entities/product.entity'
-import { CreateProductDto, ProductResponseDto, UpdateProductDto } from './dto'
+import { CreateProductDto, UpdateProductDto } from './dto'
 
 @Injectable()
 export class ProductsService {
@@ -15,53 +15,33 @@ export class ProductsService {
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
-  async create(
-    createProductDto: CreateProductDto,
-  ): Promise<ProductResponseDto> {
+  async create(createProductDto: CreateProductDto): Promise<Product> {
     try {
       const product = await this.productRepository.save(createProductDto)
 
       this.cacheManager.reset()
 
-      return {
-        status: HttpStatus.OK,
-        message: 'create',
-        data: product,
-      }
+      return product
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async findAll(): Promise<ProductResponseDto> {
+  async findAll(): Promise<Product[]> {
     try {
       const cacheProducts: Product[] = await this.cacheManager.get(
         CACHE_KEYS.PRODUCTS_FIND_ALL,
       )
 
-      if (cacheProducts) {
-        return {
-          status: HttpStatus.OK,
-          message:
-            cacheProducts.length < 1
-              ? 'No hay productos disponibles en este momento'
-              : 'ok',
-          data: cacheProducts,
-        }
+      if (cacheProducts && cacheProducts.length > 0) {
+        return cacheProducts
       }
 
       const products = await this.productRepository.find()
 
       this.cacheManager.set(CACHE_KEYS.PRODUCTS_FIND_ALL, products)
 
-      return {
-        status: HttpStatus.OK,
-        message:
-          products.length < 1
-            ? 'No hay productos disponibles en este momento'
-            : 'ok',
-        data: products,
-      }
+      return products
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
@@ -75,28 +55,17 @@ export class ProductsService {
       ],
     })
 
-    return {
-      status: HttpStatus.OK,
-      message:
-        products.length < 1
-          ? `No se encontraron productos disponibles que incluyan la palabra ${filter}`
-          : 'ok',
-      data: products,
-    }
+    return products
   }
 
-  async findOne(id: number): Promise<ProductResponseDto> {
+  async findOne(id: number): Promise<Product> {
     try {
       const cacheProduct: Product = await this.cacheManager.get(
         CACHE_KEYS.PRODUCTS_FIND_ONE,
       )
 
       if (cacheProduct && cacheProduct.id === id) {
-        return {
-          status: HttpStatus.OK,
-          message: 'ok',
-          data: cacheProduct,
-        }
+        return cacheProduct
       }
 
       const product = await this.productRepository.findOne({ where: { id } })
@@ -109,11 +78,7 @@ export class ProductsService {
 
       this.cacheManager.set(CACHE_KEYS.PRODUCTS_FIND_ONE, product)
 
-      return {
-        status: HttpStatus.OK,
-        message: 'ok',
-        data: product,
-      }
+      return product
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
@@ -123,37 +88,22 @@ export class ProductsService {
     const cacheCategories = this.cacheManager.get(CACHE_KEYS.CATEGORIES)
 
     if (cacheCategories) {
-      return {
-        status: HttpStatus.OK,
-        message: 'ok',
-        data: CATEGORIES,
-      }
+      return cacheCategories
     }
 
     this.cacheManager.set(CACHE_KEYS.CATEGORIES, CATEGORIES)
 
-    return {
-      status: HttpStatus.OK,
-      message: 'ok',
-      data: CATEGORIES,
-    }
+    return CATEGORIES
   }
 
-  async findByCategory(category: CATEGORIES): Promise<ProductResponseDto> {
+  async findByCategory(category: CATEGORIES): Promise<Product[]> {
     try {
       const cacheProducts: Product[] = await this.cacheManager.get(
         CACHE_KEYS.PRODUCTS_FIND_BY_CATEGORY,
       )
 
       if (cacheProducts && cacheProducts[0].category === category) {
-        return {
-          status: HttpStatus.OK,
-          message:
-            cacheProducts.length < 1
-              ? `no se encontraron productos de categoria ${category}`
-              : 'ok',
-          data: cacheProducts,
-        }
+        return cacheProducts
       }
 
       const products = await this.productRepository.findBy({ category })
@@ -162,14 +112,7 @@ export class ProductsService {
         this.cacheManager.set(CACHE_KEYS.PRODUCTS_FIND_BY_CATEGORY, products)
       }
 
-      return {
-        status: HttpStatus.OK,
-        message:
-          products.length < 1
-            ? `no se encontraron productos de categoria ${category}`
-            : 'ok',
-        data: products,
-      }
+      return products
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
@@ -178,7 +121,7 @@ export class ProductsService {
   async update(
     id: number,
     updateProductDto: UpdateProductDto,
-  ): Promise<ProductResponseDto> {
+  ): Promise<Product> {
     try {
       const existProduct = await this.productRepository.exists({
         where: { id },
@@ -198,17 +141,13 @@ export class ProductsService {
 
       this.cacheManager.reset()
 
-      return {
-        status: HttpStatus.OK,
-        message: 'update',
-        data: productUpdated,
-      }
+      return productUpdated
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async remove(id: number): Promise<ProductResponseDto> {
+  async remove(id: number): Promise<Product> {
     try {
       const product = await this.productRepository.findOne({ where: { id } })
 
@@ -222,11 +161,7 @@ export class ProductsService {
 
       this.cacheManager.reset()
 
-      return {
-        status: HttpStatus.OK,
-        message: 'delete',
-        data: product,
-      }
+      return product
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }

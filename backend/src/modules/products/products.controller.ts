@@ -7,16 +7,13 @@ import {
   Param,
   Delete,
 } from '@nestjs/common'
+import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger'
+
 import { ProductsService } from './products.service'
 import { CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductDto } from './dto/update-product.dto'
-import { CATEGORIES } from 'src/constants/categories.enum'
-import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger'
-import {
-  ProductResponseDto,
-  ProductsResponseCategoriesDto,
-  ProductsResponseDto,
-} from './dto/product-response.dto'
+import { CATEGORIES } from '../../constants/categories.enum'
+import { Product } from './entities/product.entity'
 
 @ApiTags('Products')
 @Controller('products')
@@ -25,14 +22,14 @@ export class ProductsController {
 
   @Post('create')
   @ApiCreatedResponse({
-    type: ProductResponseDto,
+    type: Product,
   })
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto)
   }
 
   @ApiResponse({
-    type: ProductsResponseDto,
+    type: [Product],
   })
   @Get('all')
   findAll() {
@@ -40,7 +37,7 @@ export class ProductsController {
   }
 
   @ApiResponse({
-    type: ProductsResponseDto,
+    type: [Product],
   })
   @Get('search/:filter')
   findByMatch(@Param('filter') filter: string) {
@@ -48,7 +45,7 @@ export class ProductsController {
   }
 
   @ApiCreatedResponse({
-    type: ProductResponseDto,
+    type: Product,
   })
   @Get('id/:productId')
   findOne(@Param('productId') productId: string) {
@@ -56,16 +53,14 @@ export class ProductsController {
   }
 
   @Get('category')
-  @ApiResponse({
-    type: ProductsResponseCategoriesDto,
-  })
+  @ApiResponse({})
   categories() {
     return this.productsService.getCategories()
   }
 
   @Get('category/:category')
   @ApiCreatedResponse({
-    type: ProductsResponseDto,
+    type: [Product],
   })
   findByCategory(@Param('category') category: CATEGORIES) {
     return this.productsService.findByCategory(category)
@@ -73,7 +68,7 @@ export class ProductsController {
 
   @Patch('update/:productId')
   @ApiResponse({
-    type: ProductResponseDto,
+    type: Product,
   })
   update(
     @Param('productId') productId: string,
@@ -84,7 +79,7 @@ export class ProductsController {
 
   @Delete('delete/:productId')
   @ApiResponse({
-    type: ProductResponseDto,
+    type: Product,
   })
   remove(@Param('productId') productId: string) {
     return this.productsService.remove(Number(productId))
