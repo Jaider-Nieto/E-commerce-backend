@@ -8,7 +8,9 @@ import { ShoppingCartModule } from './modules/shopping-cart/shopping-cart.module
 import { CacheModule } from '@nestjs/cache-manager'
 import { redisStore } from 'cache-manager-redis-yet'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ChatSupportModule } from './modules/chat-support/chat-support.module'
 
+console.log(process.env)
 @Module({
   imports: [
     UsersModule,
@@ -18,7 +20,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
       inject: [ConfigService],
       useFactory: async (configModule: ConfigService) => ({
         type: 'postgres',
-        host: configModule.get('DB_HOST'),
+        host: configModule.get('DB_HOST') || 'localhost',
         port: configModule.get('DB_PORT'),
         username: configModule.get('DB_USER'),
         password: configModule.get('DB_PASSWORD'),
@@ -38,13 +40,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
       useFactory: async (configModule: ConfigService) => ({
         store: await redisStore({
           socket: {
-            host: configModule.get('REDIS_HOST'),
+            host: configModule.get('REDIS_HOST') || 'localhost',
             port: configModule.get('REDIS_PORT'),
           },
           ttl: configModule.get('TTL'),
         }),
       }),
     }),
+    ChatSupportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
