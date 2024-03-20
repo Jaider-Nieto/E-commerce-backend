@@ -1,20 +1,19 @@
+import { CacheModule } from '@nestjs/cache-manager'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { Module } from '@nestjs/common'
+import { redisStore } from 'cache-manager-redis-yet'
+import { TypeOrmModule } from '@nestjs/typeorm'
+
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { UsersModule } from './modules/users/users.module'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { ChatSupportModule } from './modules/chat-support/chat-support.module'
 import { ProductsModule } from './modules/products/products.module'
 import { ShoppingCartModule } from './modules/shopping-cart/shopping-cart.module'
-import { CacheModule } from '@nestjs/cache-manager'
-import { redisStore } from 'cache-manager-redis-yet'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { ChatSupportModule } from './modules/chat-support/chat-support.module'
+import { UsersModule } from './modules/users/users.module'
+import { AuthModule } from './modules/auth/auth.module'
 
-console.log(process.env)
 @Module({
   imports: [
-    UsersModule,
-    ProductsModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -29,7 +28,6 @@ console.log(process.env)
         synchronize: true,
       }),
     }),
-    ShoppingCartModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -47,7 +45,11 @@ console.log(process.env)
         }),
       }),
     }),
+    UsersModule,
+    ProductsModule,
+    ShoppingCartModule,
     ChatSupportModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -6,8 +6,9 @@ import { User } from './entities/user.entity';
 import { ShoppingCart } from '../shopping-cart/entities/shopping-cart.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User,ShoppingCart])],
+  imports: [TypeOrmModule.forFeature([User, ShoppingCart])],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}

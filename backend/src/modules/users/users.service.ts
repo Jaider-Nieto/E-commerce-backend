@@ -1,11 +1,13 @@
+import { ConfigService } from '@nestjs/config'
+import { hash } from 'bcrypt'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
-import { User } from './entities/user.entity'
-import { UpdateUserDto } from './dto/update-user.dto'
 import { CreateUserDto } from './dto/create-user.dto'
 import { ShoppingCart } from '../shopping-cart/entities/shopping-cart.entity'
+import { UpdateUserDto } from './dto/update-user.dto'
+import { User } from './entities/user.entity'
 
 @Injectable()
 export class UsersService {
@@ -13,10 +15,16 @@ export class UsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(ShoppingCart)
     private readonly shoppingCartRepository: Repository<ShoppingCart>,
+    private readonly configService: ConfigService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
+      createUserDto.password = await hash(
+        createUserDto.password,
+        Number(this.configService.get('SALT_ROUNDS'))
+      )
+
       const user = await this.userRepository.save(createUserDto)
       user.shoppingCart = await this.shoppingCartRepository.save({})
 
@@ -56,6 +64,20 @@ export class UsersService {
       return user
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    try {
+      const user = await this.userRepository.findOne({ where: { email } })
+
+      if (!user || user === null) {
+        throw new HttpException('user not found', HttpStatus.NOT_FOUND)
+      }
+
+      return user
+    } catch (error) {
+        throw new HttpException('user not found', HttpStatus.NOT_FOUND)
     }
   }
 
