@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common'
 import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger'
 
@@ -14,18 +16,29 @@ import { CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductDto } from './dto/update-product.dto'
 import { CATEGORIES } from '../../constants/categories.enum'
 import { Product } from './entities/product.entity'
+import { FileInterceptor } from '@nestjs/platform-express'
 
 @ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Post('create')
   @ApiCreatedResponse({
     type: Product,
   })
+  @Post('create')
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto)
+  }
+
+  @Post('upload-file')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    try {
+      console.log(file);
+    } catch(error) {
+      console.log(error);
+    }
   }
 
   @ApiResponse({

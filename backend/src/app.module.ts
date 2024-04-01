@@ -11,6 +11,7 @@ import { ProductsModule } from './modules/products/products.module'
 import { ShoppingCartModule } from './modules/shopping-cart/shopping-cart.module'
 import { UsersModule } from './modules/users/users.module'
 import { AuthModule } from './modules/auth/auth.module'
+import { InventoryModule } from './modules/inventory/inventory.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { AuthModule } from './modules/auth/auth.module'
     ShoppingCartModule,
     ChatSupportModule,
     AuthModule,
+    InventoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
