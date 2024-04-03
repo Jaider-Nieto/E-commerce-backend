@@ -4,7 +4,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
   SubscribeMessage,
-  MessageBody
+  MessageBody,
 } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
 
@@ -23,7 +23,7 @@ export class ChatSupportGateway
   }
 
   @SubscribeMessage('mensaje')
-  handleMessage(@MessageBody() data: any){
-    console.log(data);
+  handleMessage(@MessageBody() data: any) {
+    console.log(data)
   }
 }

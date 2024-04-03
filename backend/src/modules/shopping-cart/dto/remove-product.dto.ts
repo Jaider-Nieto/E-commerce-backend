@@ -1,3 +1,3 @@
-import { AddProductDto } from "./add-product.dto";
+import { AddProductDto } from './add-product.dto'
 
 export class RemoveProductDto extends AddProductDto {}

@@ -35,9 +35,9 @@ export class ProductsController {
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     try {
-      console.log(file);
-    } catch(error) {
-      console.log(error);
+      console.log(file)
+    } catch (error) {
+      console.log(error)
     }
   }
 

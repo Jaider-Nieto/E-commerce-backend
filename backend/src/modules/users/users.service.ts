@@ -22,7 +22,7 @@ export class UsersService {
     try {
       createUserDto.password = await hash(
         createUserDto.password,
-        Number(this.configService.get('SALT_ROUNDS'))
+        Number(this.configService.get('SALT_ROUNDS')),
       )
 
       const user = await this.userRepository.save(createUserDto)
@@ -77,7 +77,7 @@ export class UsersService {
 
       return user
     } catch (error) {
-        throw new HttpException('user not found', HttpStatus.NOT_FOUND)
+      throw new HttpException('user not found', HttpStatus.NOT_FOUND)
     }
   }
 

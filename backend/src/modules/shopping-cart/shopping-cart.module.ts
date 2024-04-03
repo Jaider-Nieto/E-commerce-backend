@@ -10,6 +10,6 @@ import { User } from '../users/entities/user.entity'
   imports: [TypeOrmModule.forFeature([ShoppingCart, Product, User])],
   controllers: [ShoppingCartController],
   providers: [ShoppingCartService],
-  exports: [ShoppingCartService]
+  exports: [ShoppingCartService],
 })
 export class ShoppingCartModule {}

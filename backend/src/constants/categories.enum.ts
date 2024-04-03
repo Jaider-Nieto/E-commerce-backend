@@ -12,5 +12,5 @@ export enum CATEGORIES {
   Autos = 'Autos',
   Mascotas = 'Mascotas',
   Alimentos = 'Alimentos',
-  Arte = 'Arte'
+  Arte = 'Arte',
 }

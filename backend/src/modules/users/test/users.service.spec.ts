@@ -7,10 +7,13 @@ import { UsersService } from '../users.service'
 import { User } from '../entities/user.entity'
 import { ShoppingCart } from '../../shopping-cart/entities/shopping-cart.entity'
 import { CreateUserDto } from '../dto/create-user.dto'
+import { ConfigService } from '@nestjs/config'
 
 describe('usersService', () => {
   let service: UsersService
+  // eslint-disable-next-line
   let userRepository: Repository<User>
+  // eslint-disable-next-line
   let shoppingCartRepository: Repository<ShoppingCart>
 
   const mockUsers: User[] = [
@@ -47,6 +50,7 @@ describe('usersService', () => {
       imports: [],
       controllers: [UsersController],
       providers: [
+        ConfigService,
         UsersService,
         {
           provide: getRepositoryToken(User),
@@ -82,6 +86,7 @@ describe('usersService', () => {
     })
   })
 
+  // TEST UNIT CREATE
   describe('create', () => {
     it('deberia crear un usuario', async () => {
       jest.spyOn(userRepository, 'save').mockResolvedValue(mockUser)
@@ -103,6 +108,7 @@ describe('usersService', () => {
     })
   })
 
+  // TEST UNIT FIND BY ID
   describe('findById', () => {
     it('deberia buscar un usuario por id', async () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser)
@@ -111,6 +117,7 @@ describe('usersService', () => {
 
       const user = await service.findOne(id)
 
+      expect(userRepository.findOne).toHaveBeenCalled()
       expect(user).toEqual(mockUser)
       expect(user.id).toEqual(id)
     })

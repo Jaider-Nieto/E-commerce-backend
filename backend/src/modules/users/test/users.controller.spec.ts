@@ -6,11 +6,13 @@ import { User } from '../entities/user.entity'
 import { Repository } from 'typeorm'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { ShoppingCart } from '../../../modules/shopping-cart/entities/shopping-cart.entity'
+import { ConfigService } from '@nestjs/config'
 
 describe('usersService', () => {
   let userController: UsersController
   let userService: UsersService
   let userRepository: Repository<User>
+  // eslint-disable-next-line
   let shoppingCartRepository: Repository<ShoppingCart>
 
   const mockUsers: User[] = [
@@ -44,6 +46,7 @@ describe('usersService', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
       providers: [
+        ConfigService,
         UsersService,
         {
           provide: getRepositoryToken(User),
@@ -70,10 +73,12 @@ describe('usersService', () => {
 
   describe('getAllUsers', () => {
     it('should get all users', async () => {
-      jest.spyOn(userService, 'findAll').mockResolvedValueOnce(mockUsers)
+      jest.spyOn(userService, 'findAll').mockResolvedValue(mockUsers)
+      jest.spyOn(userRepository, 'find').mockResolvedValue(mockUsers)
+
       const result = await userController.findAll()
 
-      expect(userService.findAll()).toHaveBeenCalled()
+      expect(userService.findAll).toHaveBeenCalled()
       expect(result).toEqual(mockUsers)
     })
   })

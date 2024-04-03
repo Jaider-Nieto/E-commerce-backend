@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { Product } from '../products/entities/product.entity'
 import { InjectRepository } from '@nestjs/typeorm'
-import { CATEGORIES } from 'src/constants'
+import { CATEGORIES } from '../../constants'
 
 @Injectable()
 export class InventoryService {
