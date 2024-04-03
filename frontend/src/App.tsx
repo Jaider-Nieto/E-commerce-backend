@@ -1,15 +1,14 @@
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
-import { useSelector } from 'react-redux'
+import { Route, Routes } from 'react-router-dom'
+import Home from './views/Home.view'
 
 function App() {
-  const user = useSelector((state:any) => state.user)
   return (
     <>
-      <ul>
-        <li>{user.name}</li>
-        <li>{user.email}</li>
-        <li></li>
-      </ul>
+      <Routes>
+        <Route path='/' element={Home()}></Route>
+      </Routes>
     </>
   )
 }
