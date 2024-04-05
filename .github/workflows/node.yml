@@ -16,8 +16,8 @@ jobs:
       - name: 'Install dependencies 📥'
         run: cd backend && npm ci
       - name: 'Build ⚒️'
-        run: npm run build
+        run: cd backend && npm run build
       - name: 'Lint 💅'
-        run: npm run lint
+        run: cd backend && npm run lint
       - name: 'Run test ✅'
-        run: npm run test
+        run: cd backend && npm run test
