@@ -2,11 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
-import { UsersController } from '../users.controller'
-import { UsersService } from '../users.service'
-import { User } from '../entities/user.entity'
-import { ShoppingCart } from '../../shopping-cart/entities/shopping-cart.entity'
-import { CreateUserDto } from '../dto/create-user.dto'
+import { UsersController } from './users.controller'
+import { UsersService } from './users.service'
+import { User } from './entities/user.entity'
+import { ShoppingCart } from '../shopping-cart/entities/shopping-cart.entity'
+import { CreateUserDto } from './dto/create-user.dto'
 import { ConfigService } from '@nestjs/config'
 
 describe('usersService', () => {
@@ -137,8 +137,8 @@ describe('usersService', () => {
     })
   })
 
-  // TEST UNIT DELETE
-  describe('delete', () => {
+  // TEST UNIT DELETED
+  describe('deleted', () => {
     it('deberia eliminar un usuario', async () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(mockUser)
       jest.spyOn(userRepository, 'remove').mockResolvedValueOnce(null)
