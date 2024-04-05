@@ -11,9 +11,7 @@ import { ConfigService } from '@nestjs/config'
 
 describe('usersService', () => {
   let service: UsersService
-  // eslint-disable-next-line
   let userRepository: Repository<User>
-  // eslint-disable-next-line
   let shoppingCartRepository: Repository<ShoppingCart>
 
   const mockUsers: User[] = [
@@ -44,6 +42,18 @@ describe('usersService', () => {
   ]
 
   const mockUser: User = mockUsers[0]
+  const mockUserUpdate: User = {
+    id: '62f8899a-69e8-4acf-8126-8fb359ef848b',
+    name: 'jaider nieto',
+    birthDate: '2002-13-09',
+    email: 'jaider13@gmail.com',
+    password: 'jaider13',
+    country: 'colombia',
+    adress: 'calle 62 carrera 18',
+    shoppingCart: null,
+    createAt: '2024-02-23T21:26:12.122Z',
+    updateAt: '2024-02-23T21:26:12.122Z',
+  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -120,6 +130,39 @@ describe('usersService', () => {
       expect(userRepository.findOne).toHaveBeenCalled()
       expect(user).toEqual(mockUser)
       expect(user.id).toEqual(id)
+    })
+  })
+
+  // TEST UNIT UPDATE
+  describe('update', () => {
+    it('deberia eliminar un usuario', async () => {
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser)
+      jest
+        .spyOn(userRepository, 'update')
+        .mockImplementation(jest.fn())
+
+      const id = '62f8899a-69e8-4acf-8126-8fb359ef848b'
+      const update = { name: 'jaider nieto', email: 'jaider13@gmail.com' }
+
+      await service.update(id, update)
+
+      expect(userRepository.findOne).toHaveBeenCalled()
+      expect(userRepository.update).toHaveBeenCalled()
+    })
+  })
+
+  // TEST UNIT DELETED
+  describe('deleted', () => {
+    it('deberia eliminar un usuario', async () => {
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(mockUser)
+      jest.spyOn(userRepository, 'remove').mockResolvedValueOnce(null)
+      jest.spyOn(shoppingCartRepository, 'delete').mockResolvedValueOnce(null)
+
+      const id = '62f8899a-69e8-4acf-8126-8fb359ef848b'
+      const user = await service.remove(id)
+
+      expect(userRepository.remove).toHaveBeenCalled()
+      expect(user).toEqual(mockUser)
     })
   })
 })
