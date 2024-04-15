@@ -37,9 +37,9 @@ jobs:
       - name: 'Run test ✅'
         run: npm run test
   
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps: 
-      - name: 'Deploy 🚀'
-        run: 
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps: 
+  #     - name: 'Deploy 🚀'
+  #       run: 
