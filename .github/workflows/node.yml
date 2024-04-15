@@ -4,28 +4,42 @@ on:
   push:
 
 jobs:
-  run:
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - name: 'Checkout 🛬'
         uses: actions/checkout@v4
-      - name: 'Cache dependencies '
+
+      - name: 'Cache dependencies 🗃️'
         id: cache-node_modules
         uses: actions/cache@v4
         with:
           path: 'node_modules'
           key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('.github/workflows/node.yml') }}
+
       - name: 'Setup node ⚙️'
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+
       - name: 'Install dependencies 📥'
         if: steps.cache-node_modules.outputs.cache-hit != 'true'
         run: npm ci
+
       - name: 'Build ⚒️'
         run: npm run build
+
       - name: 'Lint 💅'
         run: npm run lint
+
       - name: 'Run test ✅'
         run: npm run test
+  
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps: 
+      - name: 'Deploy 🚀'
+        run: 

@@ -38,10 +38,7 @@ import { InventoryModule } from './modules/inventory/inventory.module'
       inject: [ConfigService],
       useFactory: async (configModule: ConfigService) => ({
         store: await redisStore({
-          socket: {
-            host: configModule.get('REDIS_HOST') || 'localhost',
-            port: configModule.get('REDIS_PORT'),
-          },
+          url: configModule.get('REDIS_PATH'),
           ttl: configModule.get('TTL'),
         }),
       }),
