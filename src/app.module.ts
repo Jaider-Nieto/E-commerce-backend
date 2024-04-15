@@ -19,12 +19,13 @@ import { InventoryModule } from './modules/inventory/inventory.module'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configModule: ConfigService) => ({
-        type: 'postgres',
-        host: configModule.get('DB_HOST') || 'localhost',
-        port: configModule.get('DB_PORT'),
-        username: configModule.get('DB_USER'),
-        password: configModule.get('DB_PASSWORD'),
-        database: configModule.get('DB_NAME'),
+        url: configModule.get('DB_URL'),
+        // type: 'postgres',
+        // host: configModule.get('DB_HOST') || 'localhost',
+        // port: configModule.get('DB_PORT'),
+        // username: configModule.get('DB_USER'),
+        // password: configModule.get('DB_PASSWORD'),
+        // database: configModule.get('DB_NAME'),
         entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
@@ -38,7 +39,7 @@ import { InventoryModule } from './modules/inventory/inventory.module'
       inject: [ConfigService],
       useFactory: async (configModule: ConfigService) => ({
         store: await redisStore({
-          url: configModule.get('REDIS_PATH'),
+          url: configModule.get('REDIS_URL'),
           ttl: configModule.get('TTL'),
         }),
       }),
