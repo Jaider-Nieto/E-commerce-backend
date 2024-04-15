@@ -10,7 +10,7 @@ jobs:
       - name: 'Checkout 🛬'
         uses: actions/checkout@v4
       - name: 'Cache dependencies '
-        id: cache-node-modules
+        id: cache-node_modules
         uses: actions/cache@v4
         with:
           path: 'node-modules'
@@ -21,6 +21,7 @@ jobs:
           node-version: 20
           cache: npm
       - name: 'Install dependencies 📥'
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
         run: npm ci
       - name: 'Build ⚒️'
         run: npm run build
