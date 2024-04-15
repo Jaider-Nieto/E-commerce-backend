@@ -9,23 +9,21 @@ jobs:
     steps:
       - name: 'Checkout 🛬'
         uses: actions/checkout@v4
-      # - name: 'Cache dependencies '
-      #   id: cache-node-modules
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: 'node-modules'
-      #     key: ${{ runner.os }}-node_modules-${{ hashFiles('backend/package*.json') }}-${{ hashFiles('.github/workflows/node.yml') }}
+      - name: 'Cache dependencies '
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: 'node-modules'
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('package*.json') }}-${{ hashFiles('.github/workflows/node.yml') }}
       - name: 'Setup node ⚙️'
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
       - name: 'Install dependencies 📥'
-        # if: steps.cache-node-modules.outputs.cache-hit != true
-        run: cd backend && npm ci
+        run: npm ci
       - name: 'Build ⚒️'
-        run: cd backend && npm run build
+        run: npm run build
       - name: 'Lint 💅'
-        run: cd backend && npm run lint
+        run: npm run lint
       - name: 'Run test ✅'
-        run: cd backend && npm run test
+        run: npm run test
