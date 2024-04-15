@@ -20,7 +20,7 @@ import { InventoryModule } from './modules/inventory/inventory.module'
       inject: [ConfigService],
       useFactory: async (configModule: ConfigService) => ({
         url: configModule.get('DB_URL'),
-        // type: 'postgres',
+        type: 'postgres',
         // host: configModule.get('DB_HOST') || 'localhost',
         // port: configModule.get('DB_PORT'),
         // username: configModule.get('DB_USER'),
@@ -28,6 +28,7 @@ import { InventoryModule } from './modules/inventory/inventory.module'
         // database: configModule.get('DB_NAME'),
         entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
+        ssl: { rejectUnauthorized: false },
       }),
     }),
     ConfigModule.forRoot({
