@@ -27,8 +27,6 @@ export class InventoryService {
       throw new HttpException('No hay productos', HttpStatus.BAD_REQUEST)
     }
 
-    console.log(products)
-
     return products
   }
 

@@ -42,7 +42,14 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     try {
-      return await this.userRepository.find()
+      const users = await this.userRepository.find()
+      if (users.length < 1 || users === null) {
+        throw new HttpException(
+          'No hay usuarios por el momento',
+          HttpStatus.NOT_FOUND,
+        )
+      }
+      return users
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST)
     }
@@ -50,14 +57,23 @@ export class UsersService {
 
   async findOne(id: string): Promise<User> {
     try {
+      const userExist = await this.userRepository.existsBy({ id })
+
+      if (!userExist) {
+        throw new HttpException(
+          `El usuario con id ${id} no existe`,
+          HttpStatus.BAD_REQUEST,
+        )
+      }
+
       const user = await this.userRepository.findOne({
         where: { id },
         relations: ['shoppingCart'],
       })
 
-      if (!user || user === null)
+      if (user === null)
         throw new HttpException(
-          `El usuario con id ${id} no existe o ha sido eliminado`,
+          `El usuario con id ${id} ha sido eliminado`,
           HttpStatus.BAD_REQUEST,
         )
 
@@ -69,6 +85,14 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<User> {
     try {
+      const userExist = await this.userRepository.existsBy({ email })
+      if (!userExist) {
+        throw new HttpException(
+          `El usuario asociado al email ${email} no existe`,
+          HttpStatus.NOT_FOUND,
+        )
+      }
+
       const user = await this.userRepository.findOne({ where: { email } })
 
       if (!user || user === null) {

@@ -4,14 +4,12 @@ import { Module } from '@nestjs/common'
 import { redisStore } from 'cache-manager-redis-yet'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
+import { AuthModule } from './modules/auth/auth.module'
 import { ChatSupportModule } from './modules/chat-support/chat-support.module'
+import { InventoryModule } from './modules/inventory/inventory.module'
 import { ProductsModule } from './modules/products/products.module'
 import { ShoppingCartModule } from './modules/shopping-cart/shopping-cart.module'
 import { UsersModule } from './modules/users/users.module'
-import { AuthModule } from './modules/auth/auth.module'
-import { InventoryModule } from './modules/inventory/inventory.module'
 
 @Module({
   imports: [
@@ -21,14 +19,9 @@ import { InventoryModule } from './modules/inventory/inventory.module'
       useFactory: async (configModule: ConfigService) => ({
         url: configModule.get('DB_URL'),
         type: 'postgres',
-        // host: configModule.get('DB_HOST') || 'localhost',
-        // port: configModule.get('DB_PORT'),
-        // username: configModule.get('DB_USER'),
-        // password: configModule.get('DB_PASSWORD'),
-        // database: configModule.get('DB_NAME'),
         entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
-        ssl: { rejectUnauthorized: false },
+        // ssl: { rejectUnauthorized: false },
       }),
     }),
     ConfigModule.forRoot({
@@ -52,8 +45,6 @@ import { InventoryModule } from './modules/inventory/inventory.module'
     AuthModule,
     InventoryModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {
   static port: number
