@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
@@ -7,12 +8,13 @@ import { UsersService } from '../users.service'
 import { User } from '../entities/user.entity'
 import { ShoppingCart } from '../../shopping-cart/entities/shopping-cart.entity'
 import { CreateUserDto } from '../dto/create-user.dto'
-import { ConfigService } from '@nestjs/config'
 
 describe('usersService', () => {
   let service: UsersService
-  let userRepository: Repository<User>
+  let userRepository: userRepositoryMock
   let shoppingCartRepository: Repository<ShoppingCart>
+
+  class userRepositoryMock extends Repository<User> {}
 
   const mockUsers: User[] = [
     {
@@ -52,7 +54,7 @@ describe('usersService', () => {
         UsersService,
         {
           provide: getRepositoryToken(User),
-          useClass: Repository,
+          useClass: userRepositoryMock,
         },
         {
           provide: getRepositoryToken(ShoppingCart),
@@ -62,7 +64,7 @@ describe('usersService', () => {
     }).compile()
 
     service = module.get<UsersService>(UsersService)
-    userRepository = module.get<Repository<User>>(getRepositoryToken(User))
+    userRepository = module.get<userRepositoryMock>(getRepositoryToken(User))
     shoppingCartRepository = module.get<Repository<ShoppingCart>>(
       getRepositoryToken(ShoppingCart),
     )
@@ -110,6 +112,7 @@ describe('usersService', () => {
   describe('findById', () => {
     it('deberia buscar un usuario por id', async () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser)
+      jest.spyOn(userRepository, 'existsBy').mockResolvedValue(true)
 
       const id = '62f8899a-69e8-4acf-8126-8fb359ef848b'
 

@@ -21,7 +21,7 @@ import { UsersModule } from './modules/users/users.module'
         type: 'postgres',
         entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true,
-        // ssl: { rejectUnauthorized: false },
+        ssl: { rejectUnauthorized: false },
       }),
     }),
     ConfigModule.forRoot({
